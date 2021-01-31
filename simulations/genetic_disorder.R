@@ -10,9 +10,9 @@ simulate_experiment <- function(p=0.02, n=10000) {
   #
   # Parameters:
   #     p (double): Probability of an individual within the population of having the genetic disorder
-  #     n (double): Sample size | Number of hypotetical subjects
+  #     n (double): Sample size | Number of hypothetical subjects
   # Returns:
-  #     double:
+  #     double: Empirical calculation of P(B|A)
 
   # For the simulation we define two events, A and B:
   #     Let A = "Test result is positive"
@@ -29,17 +29,17 @@ simulate_experiment <- function(p=0.02, n=10000) {
 
 
 apply_test <- function (subjects, sens=0.999, spec=0.995){
-  # Simulates a test to a sample of subjects. Sensitibity and specifity could be passed in as parameters.
+  # Simulates a test to a sample of subjects. sensitivity and specificity  could be passed in as parameters.
   #
   # It creates a vector u of size n, with random numbers uniformly distributed between {0, 1}. For each subject, we
-  # compare u_i either against the sensitiv if it has ths disroder, or against the specifity if it doesn't have the
+  # compare u_i either against the sensitivity if it has ths disorder, or against the specificity if it doesn't have the
   # disorder.
   #
   # Parameters:
-  #     B (vector): Sample of subjects to apply the test to. Values in {0, 1}
-  #     sens (double): probability that the test returns a positive result, if the individual has the disorder
-  #     spec (double): probability that the test reurns a negaative result, if the individual doesn't have the disorder
-  #                 also defined as 1 - (false positive rate)
+  #     subjects (vector): Sample of subjects to apply the test to. Values in {0, 1}
+  #     sens (double): Probability that the test returns a positive result, if the individual has the disorder
+  #     spec (double): Probability that the test returns a negative result, if the individual doesn't have the disorder
+  #                    also defined as 1 - (false positive rate)
   #
   # Returns:
   #     vector: Vector with tests results. Values in {0, 1}
