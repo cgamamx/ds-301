@@ -1,4 +1,4 @@
-#Genetic Disorder Testing Simulation</h1>
+# Genetic Disorder Testing Simulation
 (book #1.13) A medical company touts its new test for a certain genetic disorder. The false negative rate is small: if
 you have the disorder, the probability that the test returns a positive result is 0.999. The false positive rate is also
 small: if you do not have the disorder, the probability that the test returns a positive result is only 0.005. Assume
