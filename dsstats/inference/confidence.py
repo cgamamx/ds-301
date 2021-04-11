@@ -47,14 +47,16 @@ def two_proportions_interval(sample: pd.Series, categories: Tuple[str, str], ci:
     Example:
         The following is an example of the format for the `sample` parameter. Similarly to `single_proportion_interval`,
         the index values (Desipramine, Lithium, Placebo) are the categories, and the values are the count of elements in
-        each category. The `two_proportions_interval`, requires at least three categories.
-        >>> sample
-        Out[1]:
-        Drug
-        Desipramine    14
-        Lithium         6
-        Placebo         4
-        Name: Relapse, dtype: int64
+        each category. The `two_proportions_interval`, requires at least three categories::
+
+            >>> sample
+            Out[1]:
+            Drug
+            Desipramine    14
+            Lithium         6
+            Placebo         4
+            Name: Relapse, dtype: int64
+
     """
     n = sample.sum()
     n1 = sample[categories[0]]
