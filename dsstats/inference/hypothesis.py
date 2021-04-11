@@ -63,13 +63,14 @@ def single_proportion_test(sample: pd.Series, category: str, p_0: float, tail: s
 
     Example:
         The following is an example of the format required for the `sample` parameter. The index values (yes, no) are
-        the categories, and the values are the count of elements in each category.
-        >>> sample
-        Out[1]:
-        Relapse
-        no      4
-        yes    20
-        Name: Drug, dtype: int64
+        the categories, and the values are the count of elements in each category::
+
+            >>> sample
+            Out[1]:
+            Relapse
+            no      4
+            yes    20
+            Name: Drug, dtype: int64
     """
     n = sample.sum()
     p_hat = sample[category] / n
