@@ -1,3 +1,8 @@
+"""This module includes two functions to calculate the sample size for estimating one proportion and one mean. The
+functions return the calculation as per the formula sheet provided by Dr. Parker, and are easy enough that they don't
+require detailed documentation.
+"""
+
 from scipy import stats as st
 import numpy as np
 
