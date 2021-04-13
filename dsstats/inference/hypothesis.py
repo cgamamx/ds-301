@@ -22,11 +22,14 @@ def get_p_value(ha_parameter: float, distribution: str = 'norm', alternative: st
         # Normal dist by default
         dist = ss.norm
     if alternative == 'greater':
-        p_value = 1 - dist.cdf(np.abs(ha_parameter), **kwargs)
-    elif alternative == 'two-sided':
-        p_value = dist.cdf(-1 * np.abs(ha_parameter), **kwargs) + (1 - dist.cdf(np.abs(ha_parameter), **kwargs))
+        p_value = 1 - dist.cdf(ha_parameter, **kwargs)
     elif alternative == 'less':
-        p_value = dist.cdf(-1 * np.abs(ha_parameter), **kwargs)
+        p_value = dist.cdf(ha_parameter, **kwargs)
+    elif alternative == 'two-sided':
+        # Two-sided only makes sense when two variables are involved. i.e. Difference of means or proportions, slope,
+        # correlation, etc. Otherwise, the computed result will be greater than 1, and given that the p-value is a
+        # probability, it should be less or equal than 1.
+        p_value = np.minimum(2 * dist.cdf(-1 * np.abs(ha_parameter), **kwargs), 1)
     else:
         raise ValueError("alternative must be 'less', 'greater' or 'two-sided'")
     return p_value
