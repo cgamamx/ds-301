@@ -3,6 +3,32 @@ from dsstats.inference import samples
 from dsstats.inference import hypothesis
 
 immune_tea_data = pd.read_csv('../dsstats/data/ImmuneTea.csv')
+wetsuit_data = pd.read_csv('../dsstats/data/Wetsuits.csv')
+
+# Q7.a Data: Wetsuits (difference of two means), Test: is there a difference in swimming speeds due to wearing a wetsuit
+test_result = hypothesis.two_mean_test(wetsuit_data.describe(), ('Wetsuit', 'NoWetsuit'),
+                                       alternative='two-sided')
+print(f'Q7: The p-value of the difference of means is {test_result["p-value"]}')
+
+# Q7.a Data: Wetsuits (matched pair), Test: is there a difference in swimming speeds due to wearing a wetsuit
+wetsuit_data_difference = wetsuit_data['NoWetsuit'] - wetsuit_data['Wetsuit']
+test_result = hypothesis.single_mean_test(wetsuit_data_difference, mu_0=0, alternative='two-sided')
+print(f'Q7: The p-value as matched pairs is {test_result["p-value"]}')
+
+# Q7.b
+# Q7.c Data Manipulation for the Simulation
+wetsuit_statkey = pd.DataFrame(
+                                data={
+                                    'Time': wetsuit_data['Wetsuit'],
+                                    'Wetsuit': 'yes'
+                                })
+wetsuit_statkey = wetsuit_statkey.append(pd.DataFrame(
+                                                        data={
+                                                            'Time': wetsuit_data['NoWetsuit'],
+                                                            'Wetsuit': 'no'
+                                                        }
+                                                      ), ignore_index=True)
+wetsuit_statkey.to_csv('/tmp/wetsuit_statkey.csv', index=False)
 
 # Q11. The manufacturers are interested in estimating the percentage of defective light bulbs coming from a certain
 # process. They want a 90% confidence interval with a margin of error of 2%.  How many light bulbs must they test?
@@ -25,7 +51,7 @@ print('Q14: NOOP')
 
 # Q15. Data: Immune Tea, Test: Production of interferon gamma is enhanced in tea drinkers?
 interferon_gamma = immune_tea_data.groupby('Drink').describe().get('InterferonGamma').transpose()
-test_result = hypothesis.two_mean_test(interferon_gamma, ('Tea', 'Coffee'), tail='right-tail')
+test_result = hypothesis.two_mean_test(interferon_gamma, ('Tea', 'Coffee'), alternative='greater')
 print(f'Q15: The p-value is {test_result["p-value"]}')
-test_result = hypothesis.two_mean_test(interferon_gamma, ('Tea', 'Coffee'), tail='right-tail', df='satterthwait')
+test_result = hypothesis.two_mean_test(interferon_gamma, ('Tea', 'Coffee'), alternative='greater', df='satterthwait')
 print(f'Q15: The p-value, using the Satterthwait approximation is {test_result["p-value"]}')

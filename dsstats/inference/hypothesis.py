@@ -1,43 +1,44 @@
 import numpy as np
 import pandas as pd
 from typing import Dict, Tuple
-from scipy import stats as st
+from scipy import stats as ss
 
 
-def get_p_value(ha_parameter: float, distribution: str = 'norm', tail: str = 'left', **kwargs) -> float:
+def get_p_value(ha_parameter: float, distribution: str = 'norm', alternative: str = 'less', **kwargs) -> float:
     """Calculates the p-value for a test
 
     Args:
         ha_parameter: Value of the Alternate Hypothesis parameter
         distribution: Theoretical distribution to use, currently it only supports 't' or 'norm'
-        tail: 'left-tail' (default), 'right-tail', or 'two-tail'.
+        alternative: Defines the alternative hypothesis. Possible values: 'less' (default), 'greater', or 'two-sided'.
         **kwargs: All the extra parameters will be packed in kwargs, i.e. df for degrees of freedom in the "t" dist
 
     Returns:
         The calculated p-value
     """
     if distribution == 't':
-        dist = st.t
+        dist = ss.t
     else:
         # Normal dist by default
-        dist = st.norm
-    if tail == 'right-tail':
-        p_value = dist.cdf(-ha_parameter, **kwargs)
-    elif tail == 'two-tail':
-        p_value = dist.cdf(ha_parameter, **kwargs) + (1 - dist.cdf(-ha_parameter, **kwargs))
+        dist = ss.norm
+    if alternative == 'greater':
+        p_value = 1 - dist.cdf(np.abs(ha_parameter), **kwargs)
+    elif alternative == 'two-sided':
+        p_value = dist.cdf(-1 * np.abs(ha_parameter), **kwargs) + (1 - dist.cdf(np.abs(ha_parameter), **kwargs))
+    elif alternative == 'less':
+        p_value = dist.cdf(-1 * np.abs(ha_parameter), **kwargs)
     else:
-        # Left tail by default
-        p_value = dist.cdf(ha_parameter, **kwargs)
+        raise ValueError("alternative must be 'less', 'greater' or 'two-sided'")
     return p_value
 
 
-def single_mean_test(sample: pd.Series, mu_0: float, tail: str) -> Dict[str, float]:
+def single_mean_test(sample: pd.Series, mu_0: float, alternative: str) -> Dict[str, float]:
     """Performs a single mean test
 
     Args:
         sample: Numeric variable with the values in a Pandas Series
         mu_0: Mean from the Null Hypothesis
-        tail: tail for p-value: 'left-tail', 'right-tail', or 'two-tail'.
+        alternative: Defines the alternative hypothesis. Possible values: 'less', 'greater', or 'two-sided'.
 
     Returns:
         Dict with the calculated "t" parameter and the p-value
@@ -46,17 +47,17 @@ def single_mean_test(sample: pd.Series, mu_0: float, tail: str) -> Dict[str, flo
     _SE = _statistics['std'] / np.sqrt(_statistics['count'])
     t = (_statistics['mean'] - mu_0) / _SE
     df = _statistics['count'] - 1
-    return {'t': t, 'p-value': get_p_value(t, distribution='t', tail=tail, df=df)}
+    return {'t': t, 'p-value': get_p_value(t, distribution='t', alternative=alternative, df=df)}
 
 
-def single_proportion_test(sample: pd.Series, category: str, p_0: float, tail: str) -> Dict[str, float]:
+def single_proportion_test(sample: pd.Series, category: str, p_0: float, alternative: str) -> Dict[str, float]:
     """Performs a single proportion test
 
     Args:
         sample: Series with the count of two categorical variables. Check the example below for details.
         category: The name of the category we want to use for the test.
         p_0: The proportion of the Null Hypothesis
-        tail: tail for p-value: 'left-tail', 'right-tail', or 'two-tail'.
+        alternative: Defines the alternative hypothesis. Possible values: 'less', 'greater', or 'two-sided'.
 
     Returns:
         Dict with the calculated "z" parameter and the p-value
@@ -76,17 +77,17 @@ def single_proportion_test(sample: pd.Series, category: str, p_0: float, tail: s
     p_hat = sample[category] / n
     _SE = np.sqrt(p_0 * (1 - p_0) / n)
     z = p_hat - p_0 / _SE
-    return {'z': z, 'p-value': get_p_value(z, tail=tail)}
+    return {'z': z, 'p-value': get_p_value(z, alternative=alternative)}
 
 
-def two_mean_test(data_stats: pd.DataFrame, categories: Tuple[str, str], tail: str, **args) -> Dict[str, float]:
+def two_mean_test(data_stats: pd.DataFrame, categories: Tuple[str, str], alternative: str, **args) -> Dict[str, float]:
     """Performs a two mean test
 
     Args:
         data_stats: Summaary Statistics of two numerical variables. Check the example below for details.
         categories: A Tuple with the name of the categories required to use the test. The order is important, the first
             element of the Tuple will be `X1` and the second element will be `X2`. The Null Hypothesis is `X1 - X2 = 0`
-        tail: tail for p-value: 'left-tail', 'right-tail', or 'two-tail'.
+        alternative: 'less', 'greater', or 'two-sided'.
         **args: Optional parameters will be packed in `args`. Currently, there is only one optional parameter:
             `df`, which is used to specify how to calculate the degrees of freedom for the t-distribution. If the value
             of df is set to `satterthwait`, the Satterthwait approximation will be used. Any other values will result in
@@ -123,10 +124,10 @@ def two_mean_test(data_stats: pd.DataFrame, categories: Tuple[str, str], tail: s
         df = ((s1**2/n1 + s1**2/n1)**2) / ((1/(n1-1))*(s1**2/n1)**2 + (1/(n2-1))*(s2**2/n2)**2)
     else:
         df = min(n1-1, n2-1)
-    return {'t': t, 'p-value': get_p_value(t, distribution='t', df=df, tail=tail)}
+    return {'t': t, 'p-value': get_p_value(t, distribution='t', df=df, alternative=alternative)}
 
 
-def two_proportions_test(sample: pd.Series, categories: Tuple[str, str], tail: str) -> Dict[str, float]:
+def two_proportions_test(sample: pd.Series, categories: Tuple[str, str], alternative: str) -> Dict[str, float]:
     """Performs a two proportions test
 
     Args:
@@ -134,7 +135,7 @@ def two_proportions_test(sample: pd.Series, categories: Tuple[str, str], tail: s
         categories: A Tuple with the name of the categories required to use the test. The order is important, the first
             element of the Tuple will be used for `p1` and the second element for `p2`. The Null Hypothesis is
             `X1 - X2 = 0`
-        tail: tail for p-value: 'left-tail', 'right-tail', or 'two-tail'.
+        alternative: 'less', 'greater', or 'two-sided'.
 
     Returns:
         Dict with the calculated "z" parameter and the p-value
@@ -161,4 +162,4 @@ def two_proportions_test(sample: pd.Series, categories: Tuple[str, str], tail: s
     p_bar = (n1+n2) / (2*n)
     _SE = np.sqrt((p_bar*(1-p_bar))/n + (p_bar*(1-p_bar))/n)
     z = (p1_hat - p2_hat) / _SE
-    return {'z': z, 'p-value': get_p_value(z, tail=tail)}
+    return {'z': z, 'p-value': get_p_value(z, alternative=alternative)}
