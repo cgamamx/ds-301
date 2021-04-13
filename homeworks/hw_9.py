@@ -1,10 +1,10 @@
 import pandas as pd
-from dsstats.inference import hypothesis
-from dsstats.inference import confidence
+from statistics.inference import hypothesis
+from statistics.inference import confidence
 
-salary_data = pd.read_csv('dsstats/data/SalaryGender.csv')
-student_data = pd.read_csv('dsstats/data/StudentSurvey.csv')
-cocaine_data = pd.read_csv('dsstats/data/CocaineTreatment.csv')
+salary_data = pd.read_csv('statistics/data/SalaryGender.csv')
+student_data = pd.read_csv('statistics/data/StudentSurvey.csv')
+cocaine_data = pd.read_csv('statistics/data/CocaineTreatment.csv')
 
 # Q1. Data: Salary Gender, Test: Avg of college teachers is less than 50 years
 test_result = hypothesis.single_mean_test(salary_data['Age'], mu_0=50, alternative='less')

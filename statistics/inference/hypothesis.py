@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from typing import Dict, Tuple
 from scipy import stats as ss
+from tools.helpers import validate_conditions_for_theoretical_distns
 
 
 def get_p_value(ha_parameter: float, distribution: str = 'norm', alternative: str = 'less', **kwargs) -> float:
@@ -50,6 +51,7 @@ def single_mean_test(sample: pd.Series, mu_0: float, alternative: str) -> Dict[s
     _SE = _statistics['std'] / np.sqrt(_statistics['count'])
     t = (_statistics['mean'] - mu_0) / _SE
     df = _statistics['count'] - 1
+    validate_conditions_for_theoretical_distns(inference_type='single-mean', n=_statistics['count'])
     return {'t': t, 'p-value': get_p_value(t, distribution='t', alternative=alternative, df=df)}
 
 
@@ -80,6 +82,7 @@ def single_proportion_test(sample: pd.Series, category: str, p_0: float, alterna
     p_hat = sample[category] / n
     _SE = np.sqrt(p_0 * (1 - p_0) / n)
     z = p_hat - p_0 / _SE
+    validate_conditions_for_theoretical_distns(inference_type='single-proportion', n=n, p=p_hat)
     return {'z': z, 'p-value': get_p_value(z, alternative=alternative)}
 
 
@@ -120,13 +123,16 @@ def two_mean_test(data_stats: pd.DataFrame, categories: Tuple[str, str], alterna
     s2 = set_b['std']
     n1 = set_a['count']
     n2 = set_b['count']
-    _SE = np.sqrt((s1**2)/n1 + (s2**2)/n2)
+    _SE = np.sqrt((s1 ** 2) / n1 + (s2 ** 2) / n2)
     t = (set_a['mean'] - set_b['mean']) / _SE
 
     if args.get('df') == 'satterthwait':
-        df = ((s1**2/n1 + s1**2/n1)**2) / ((1/(n1-1))*(s1**2/n1)**2 + (1/(n2-1))*(s2**2/n2)**2)
+        df = ((s1 ** 2 / n1 + s1 ** 2 / n1) ** 2) / (
+                    (1 / (n1 - 1)) * (s1 ** 2 / n1) ** 2 + (1 / (n2 - 1)) * (s2 ** 2 / n2) ** 2)
     else:
-        df = min(n1-1, n2-1)
+        df = min(n1 - 1, n2 - 1)
+
+    validate_conditions_for_theoretical_distns(inference_type='two-means', n1=n1, n2=n2)
     return {'t': t, 'p-value': get_p_value(t, distribution='t', df=df, alternative=alternative)}
 
 
@@ -162,7 +168,8 @@ def two_proportions_test(sample: pd.Series, categories: Tuple[str, str], alterna
     n2 = sample[categories[1]]
     p1_hat = n1 / n
     p2_hat = n2 / n
-    p_bar = (n1+n2) / (2*n)
-    _SE = np.sqrt((p_bar*(1-p_bar))/n + (p_bar*(1-p_bar))/n)
+    p_bar = (n1 + n2) / (2 * n)
+    _SE = np.sqrt((p_bar * (1 - p_bar)) / n + (p_bar * (1 - p_bar)) / n)
     z = (p1_hat - p2_hat) / _SE
+    validate_conditions_for_theoretical_distns(inference_type='two-proportions', x1=(n1, p1_hat), x2=(n2, p2_hat))
     return {'z': z, 'p-value': get_p_value(z, alternative=alternative)}

@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from typing import Tuple
 from scipy import stats as st
+from tools.helpers import validate_conditions_for_theoretical_distns
 
 
 def single_mean_interval(sample: pd.Series, ci: float) -> Tuple[float, float]:
@@ -19,6 +20,7 @@ def single_mean_interval(sample: pd.Series, ci: float) -> Tuple[float, float]:
     df = _statistics['count'] - 1
     t_star = st.t.ppf((1-ci)/2, df=df)
     _ME = t_star * _SE
+    validate_conditions_for_theoretical_distns(inference_type='single-mean', n=_statistics['count'])
     return _statistics['mean'] - _ME, _statistics['mean'] + _ME
 
 
@@ -66,4 +68,5 @@ def two_proportions_interval(sample: pd.Series, categories: Tuple[str, str], ci:
     _SE = np.sqrt((p1_hat*(1-p1_hat))/n1 + (p2_hat*(1-p2_hat))/n2)
     z_star = st.norm.ppf((1-ci)/2)
     _ME = z_star * _SE
+    validate_conditions_for_theoretical_distns(inference_type='two-proportions', x1=(n1, p1_hat), x2=(n2, p2_hat))
     return (p1_hat-p2_hat) - _ME, (p1_hat-p2_hat) + _ME

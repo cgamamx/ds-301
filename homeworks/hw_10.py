@@ -1,9 +1,9 @@
 import pandas as pd
-from dsstats.inference import samples
-from dsstats.inference import hypothesis
+from statistics.inference import samples
+from statistics.inference import hypothesis
 
-immune_tea_data = pd.read_csv('../dsstats/data/ImmuneTea.csv')
-wetsuit_data = pd.read_csv('../dsstats/data/Wetsuits.csv')
+immune_tea_data = pd.read_csv('statistics/data/ImmuneTea.csv')
+wetsuit_data = pd.read_csv('statistics/data/Wetsuits.csv')
 
 # Q7.a Data: Wetsuits (difference of two means), Test: is there a difference in swimming speeds due to wearing a wetsuit
 test_result = hypothesis.two_mean_test(wetsuit_data.describe(), ('Wetsuit', 'NoWetsuit'),
@@ -16,7 +16,7 @@ test_result = hypothesis.single_mean_test(wetsuit_data_difference, mu_0=0, alter
 print(f'Q7: The p-value as matched pairs is {test_result["p-value"]}')
 
 # Q7.b
-# Q7.c Data Manipulation for the Simulation
+# Q7.c Data Manipulation for the StatKey Simulation
 wetsuit_statkey = pd.DataFrame(
                                 data={
                                     'Time': wetsuit_data['Wetsuit'],
@@ -28,7 +28,12 @@ wetsuit_statkey = wetsuit_statkey.append(pd.DataFrame(
                                                             'Wetsuit': 'no'
                                                         }
                                                       ), ignore_index=True)
-wetsuit_statkey.to_csv('/tmp/wetsuit_statkey.csv', index=False)
+# File for Two Means Simulation
+wetsuit_statkey.to_csv('/tmp/wetsuit_statkey_two-means.csv', index=False)
+
+# File for matched pairs Simulation
+wetsuit_data['Difference'] = wetsuit_data['Wetsuit'] - wetsuit_data['NoWetsuit']
+wetsuit_data.to_csv('/tmp/wetsuit_statkey_matched-pairs.csv', index=False)
 
 # Q11. The manufacturers are interested in estimating the percentage of defective light bulbs coming from a certain
 # process. They want a 90% confidence interval with a margin of error of 2%.  How many light bulbs must they test?
