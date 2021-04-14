@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>statistics.inference.hypothesis &mdash; DS 381: Probability and Statistical Inference for Data Science</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> DS 381: Probability and Statistical Inference for Data Science
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DS 381: Probability and Statistical Inference for Data Science</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>statistics.inference.hypothesis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for statistics.inference.hypothesis</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span> <span class="k">as</span> <span class="n">ss</span>
+<span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">validate_conditions_for_theoretical_distns</span>
+
+
+<div class="viewcode-block" id="get_p_value"><a class="viewcode-back" href="../../../index.html#statistics.inference.hypothesis.get_p_value">[docs]</a><span class="k">def</span> <span class="nf">get_p_value</span><span class="p">(</span><span class="n">ha_parameter</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">distribution</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;norm&#39;</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;less&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the p-value for a test</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ha_parameter: Value of the Alternate Hypothesis parameter</span>
+<span class="sd">        distribution: Theoretical distribution to use, currently it only supports &#39;t&#39; or &#39;norm&#39;</span>
+<span class="sd">        alternative: Defines the alternative hypothesis. Possible values: &#39;less&#39; (default), &#39;greater&#39;, or &#39;two-sided&#39;.</span>
+<span class="sd">        **kwargs: All the extra parameters will be packed in kwargs, i.e. df for degrees of freedom in the &quot;t&quot; dist</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The calculated p-value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">distribution</span> <span class="o">==</span> <span class="s1">&#39;t&#39;</span><span class="p">:</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">t</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Normal dist by default</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">ss</span><span class="o">.</span><span class="n">norm</span>
+    <span class="k">if</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s1">&#39;greater&#39;</span><span class="p">:</span>
+        <span class="n">p_value</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">dist</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">ha_parameter</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s1">&#39;less&#39;</span><span class="p">:</span>
+        <span class="n">p_value</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">ha_parameter</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s1">&#39;two-sided&#39;</span><span class="p">:</span>
+        <span class="c1"># Two-sided only makes sense when two variables are involved. i.e. Difference of means or proportions, slope,</span>
+        <span class="c1"># correlation, etc. Otherwise, the computed result will be greater than 1, and given that the p-value is a</span>
+        <span class="c1"># probability, it should be less or equal than 1.</span>
+        <span class="n">p_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dist</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ha_parameter</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;alternative must be &#39;less&#39;, &#39;greater&#39; or &#39;two-sided&#39;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p_value</span></div>
+
+
+<div class="viewcode-block" id="single_mean_test"><a class="viewcode-back" href="../../../index.html#statistics.inference.hypothesis.single_mean_test">[docs]</a><span class="k">def</span> <span class="nf">single_mean_test</span><span class="p">(</span><span class="n">sample</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">mu_0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Performs a single mean test</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sample: Numeric variable with the values in a Pandas Series</span>
+<span class="sd">        mu_0: Mean from the Null Hypothesis</span>
+<span class="sd">        alternative: Defines the alternative hypothesis. Possible values: &#39;less&#39;, &#39;greater&#39;, or &#39;two-sided&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict with the calculated &quot;t&quot; parameter and the p-value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_statistics</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+    <span class="n">_SE</span> <span class="o">=</span> <span class="n">_statistics</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">_statistics</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">_statistics</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">mu_0</span><span class="p">)</span> <span class="o">/</span> <span class="n">_SE</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">_statistics</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">validate_conditions_for_theoretical_distns</span><span class="p">(</span><span class="n">inference_type</span><span class="o">=</span><span class="s1">&#39;single-mean&#39;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">_statistics</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s1">&#39;p-value&#39;</span><span class="p">:</span> <span class="n">get_p_value</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="n">alternative</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">)}</span></div>
+
+
+<div class="viewcode-block" id="single_proportion_test"><a class="viewcode-back" href="../../../index.html#statistics.inference.hypothesis.single_proportion_test">[docs]</a><span class="k">def</span> <span class="nf">single_proportion_test</span><span class="p">(</span><span class="n">sample</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">category</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">p_0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Performs a single proportion test</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sample: Series with the count of two categorical variables. Check the example below for details.</span>
+<span class="sd">        category: The name of the category we want to use for the test.</span>
+<span class="sd">        p_0: The proportion of the Null Hypothesis</span>
+<span class="sd">        alternative: Defines the alternative hypothesis. Possible values: &#39;less&#39;, &#39;greater&#39;, or &#39;two-sided&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict with the calculated &quot;z&quot; parameter and the p-value</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        The following is an example of the format required for the `sample` parameter. The index values (yes, no) are</span>
+<span class="sd">        the categories, and the values are the count of elements in each category::</span>
+
+<span class="sd">            &gt;&gt;&gt; sample</span>
+<span class="sd">            Out[1]:</span>
+<span class="sd">            Relapse</span>
+<span class="sd">            no      4</span>
+<span class="sd">            yes    20</span>
+<span class="sd">            Name: Drug, dtype: int64</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">p_hat</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="n">category</span><span class="p">]</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="n">_SE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">p_0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p_0</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">p_hat</span> <span class="o">-</span> <span class="n">p_0</span> <span class="o">/</span> <span class="n">_SE</span>
+    <span class="n">validate_conditions_for_theoretical_distns</span><span class="p">(</span><span class="n">inference_type</span><span class="o">=</span><span class="s1">&#39;single-proportion&#39;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p_hat</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span><span class="p">,</span> <span class="s1">&#39;p-value&#39;</span><span class="p">:</span> <span class="n">get_p_value</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="n">alternative</span><span class="p">)}</span></div>
+
+
+<div class="viewcode-block" id="two_mean_test"><a class="viewcode-back" href="../../../index.html#statistics.inference.hypothesis.two_mean_test">[docs]</a><span class="k">def</span> <span class="nf">two_mean_test</span><span class="p">(</span><span class="n">data_stats</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">categories</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">alternative</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Performs a two mean test</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_stats: Summaary Statistics of two numerical variables. Check the example below for details.</span>
+<span class="sd">        categories: A Tuple with the name of the categories required to use the test. The order is important, the first</span>
+<span class="sd">            element of the Tuple will be `X1` and the second element will be `X2`. The Null Hypothesis is `X1 - X2 = 0`</span>
+<span class="sd">        alternative: &#39;less&#39;, &#39;greater&#39;, or &#39;two-sided&#39;.</span>
+<span class="sd">        **args: Optional parameters will be packed in `args`. Currently, there is only one optional parameter:</span>
+<span class="sd">            `df`, which is used to specify how to calculate the degrees of freedom for the t-distribution. If the value</span>
+<span class="sd">            of df is set to `satterthwait`, the Satterthwait approximation will be used. Any other values will result in</span>
+<span class="sd">            the minimum of `n1-1` or `n2-1`</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict with the calculated &quot;t&quot; parameter and the p-value</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        The following is an example of the format required for the `data_stats` parameter. The index values are the</span>
+<span class="sd">        descriptive statistics of the numeric variable and it must include `count`, `mean`, and `std`. It can easily be</span>
+<span class="sd">        generated with the `pandas.DataFrame.describe` method::</span>
+
+<span class="sd">            &gt;&gt;&gt; data_stats</span>
+<span class="sd">            Out[1]:</span>
+<span class="sd">            Drink     Coffee        Tea</span>
+<span class="sd">            count  10.000000  11.000000</span>
+<span class="sd">            mean   17.700000  34.818182</span>
+<span class="sd">            std    16.693645  21.084678</span>
+<span class="sd">            ...</span>
+<span class="sd">            max    52.000000  58.000000</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">set_a</span> <span class="o">=</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">categories</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">set_b</span> <span class="o">=</span> <span class="n">data_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">categories</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">set_a</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">]</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="n">set_b</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">]</span>
+    <span class="n">n1</span> <span class="o">=</span> <span class="n">set_a</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span>
+    <span class="n">n2</span> <span class="o">=</span> <span class="n">set_b</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span>
+    <span class="n">_SE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">s1</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">n1</span> <span class="o">+</span> <span class="p">(</span><span class="n">s2</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">n2</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">set_a</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">set_b</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="n">_SE</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;df&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;satterthwait&#39;</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="p">((</span><span class="n">s1</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">n1</span> <span class="o">+</span> <span class="n">s1</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">n1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
+                    <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">n1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">s1</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">n1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">n2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">s2</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">n2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">n1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">validate_conditions_for_theoretical_distns</span><span class="p">(</span><span class="n">inference_type</span><span class="o">=</span><span class="s1">&#39;two-means&#39;</span><span class="p">,</span> <span class="n">n1</span><span class="o">=</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="o">=</span><span class="n">n2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s1">&#39;p-value&#39;</span><span class="p">:</span> <span class="n">get_p_value</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="n">alternative</span><span class="p">)}</span></div>
+
+
+<div class="viewcode-block" id="two_proportions_test"><a class="viewcode-back" href="../../../index.html#statistics.inference.hypothesis.two_proportions_test">[docs]</a><span class="k">def</span> <span class="nf">two_proportions_test</span><span class="p">(</span><span class="n">sample</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">categories</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">alternative</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Performs a two proportions test</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        sample: Series with the count of two categorical variables. Check the example below for details.</span>
+<span class="sd">        categories: A Tuple with the name of the categories required to use the test. The order is important, the first</span>
+<span class="sd">            element of the Tuple will be used for `p1` and the second element for `p2`. The Null Hypothesis is</span>
+<span class="sd">            `X1 - X2 = 0`</span>
+<span class="sd">        alternative: &#39;less&#39;, &#39;greater&#39;, or &#39;two-sided&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict with the calculated &quot;z&quot; parameter and the p-value</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        The following is an example of the format for the `sample` parameter. Similarly to `single_proportion_test`, the</span>
+<span class="sd">        index values (Desipramine, Lithium, Placebo) are the categories, and the values are the count of elements in</span>
+<span class="sd">        each category. The `two_proportions_test`, requires at least three categories::</span>
+
+<span class="sd">            &gt;&gt;&gt; sample</span>
+<span class="sd">            Out[1]:</span>
+<span class="sd">            Drug</span>
+<span class="sd">            Desipramine    14</span>
+<span class="sd">            Lithium         6</span>
+<span class="sd">            Placebo         4</span>
+<span class="sd">            Name: Relapse, dtype: int64</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">n1</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="n">categories</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">n2</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="n">categories</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">p1_hat</span> <span class="o">=</span> <span class="n">n1</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="n">p2_hat</span> <span class="o">=</span> <span class="n">n2</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="n">p_bar</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span> <span class="o">+</span> <span class="n">n2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">_SE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">p_bar</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p_bar</span><span class="p">))</span> <span class="o">/</span> <span class="n">n</span> <span class="o">+</span> <span class="p">(</span><span class="n">p_bar</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p_bar</span><span class="p">))</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">p1_hat</span> <span class="o">-</span> <span class="n">p2_hat</span><span class="p">)</span> <span class="o">/</span> <span class="n">_SE</span>
+    <span class="n">validate_conditions_for_theoretical_distns</span><span class="p">(</span><span class="n">inference_type</span><span class="o">=</span><span class="s1">&#39;two-proportions&#39;</span><span class="p">,</span> <span class="n">x1</span><span class="o">=</span><span class="p">(</span><span class="n">n1</span><span class="p">,</span> <span class="n">p1_hat</span><span class="p">),</span> <span class="n">x2</span><span class="o">=</span><span class="p">(</span><span class="n">n2</span><span class="p">,</span> <span class="n">p2_hat</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">z</span><span class="p">,</span> <span class="s1">&#39;p-value&#39;</span><span class="p">:</span> <span class="n">get_p_value</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="n">alternative</span><span class="p">)}</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Cesar Gama.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

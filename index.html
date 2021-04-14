@@ -1,0 +1,406 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>DS 381: Probability and Statistical Inference for Data Science &mdash; DS 381: Probability and Statistical Inference for Data Science</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> DS 381: Probability and Statistical Inference for Data Science
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">DS 381: Probability and Statistical Inference for Data Science</a><ul>
+<li><a class="reference internal" href="#inference-using-theoretical-distributions">Inference using theoretical distributions</a><ul>
+<li><a class="reference internal" href="#module-statistics.inference.hypothesis">Hypothesis Testing</a></li>
+<li><a class="reference internal" href="#module-statistics.inference.confidence">Confidence Intervals</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">DS 381: Probability and Statistical Inference for Data Science</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>DS 381: Probability and Statistical Inference for Data Science</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ds-381-probability-and-statistical-inference-for-data-science">
+<h1>DS 381: Probability and Statistical Inference for Data Science<a class="headerlink" href="#ds-381-probability-and-statistical-inference-for-data-science" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<div class="section" id="inference-using-theoretical-distributions">
+<h2>Inference using theoretical distributions<a class="headerlink" href="#inference-using-theoretical-distributions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-statistics.inference.hypothesis">
+<span id="hypothesis-testing"></span><h3>Hypothesis Testing<a class="headerlink" href="#module-statistics.inference.hypothesis" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt id="statistics.inference.hypothesis.get_p_value">
+<code class="sig-prename descclassname"><span class="pre">statistics.inference.hypothesis.</span></code><code class="sig-name descname"><span class="pre">get_p_value</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ha_parameter</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'norm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'less'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">float</span><a class="reference internal" href="_modules/statistics/inference/hypothesis.html#get_p_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#statistics.inference.hypothesis.get_p_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the p-value for a test</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ha_parameter</strong> – Value of the Alternate Hypothesis parameter</p></li>
+<li><p><strong>distribution</strong> – Theoretical distribution to use, currently it only supports ‘t’ or ‘norm’</p></li>
+<li><p><strong>alternative</strong> – Defines the alternative hypothesis. Possible values: ‘less’ (default), ‘greater’, or ‘two-sided’.</p></li>
+<li><p><strong>**kwargs</strong> – All the extra parameters will be packed in kwargs, i.e. df for degrees of freedom in the “t” dist</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The calculated p-value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="statistics.inference.hypothesis.single_mean_test">
+<code class="sig-prename descclassname"><span class="pre">statistics.inference.hypothesis.</span></code><code class="sig-name descname"><span class="pre">single_mean_test</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu_0</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/statistics/inference/hypothesis.html#single_mean_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#statistics.inference.hypothesis.single_mean_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a single mean test</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample</strong> – Numeric variable with the values in a Pandas Series</p></li>
+<li><p><strong>mu_0</strong> – Mean from the Null Hypothesis</p></li>
+<li><p><strong>alternative</strong> – Defines the alternative hypothesis. Possible values: ‘less’, ‘greater’, or ‘two-sided’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dict with the calculated “t” parameter and the p-value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="statistics.inference.hypothesis.single_proportion_test">
+<code class="sig-prename descclassname"><span class="pre">statistics.inference.hypothesis.</span></code><code class="sig-name descname"><span class="pre">single_proportion_test</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_0</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/statistics/inference/hypothesis.html#single_proportion_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#statistics.inference.hypothesis.single_proportion_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a single proportion test</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample</strong> – Series with the count of two categorical variables. Check the example below for details.</p></li>
+<li><p><strong>category</strong> – The name of the category we want to use for the test.</p></li>
+<li><p><strong>p_0</strong> – The proportion of the Null Hypothesis</p></li>
+<li><p><strong>alternative</strong> – Defines the alternative hypothesis. Possible values: ‘less’, ‘greater’, or ‘two-sided’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dict with the calculated “z” parameter and the p-value</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>The following is an example of the format required for the <cite>sample</cite> parameter. The index values (yes, no) are
+the categories, and the values are the count of elements in each category:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample</span>
+<span class="go">Out[1]:</span>
+<span class="go">Relapse</span>
+<span class="go">no      4</span>
+<span class="go">yes    20</span>
+<span class="go">Name: Drug, dtype: int64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="statistics.inference.hypothesis.two_mean_test">
+<code class="sig-prename descclassname"><span class="pre">statistics.inference.hypothesis.</span></code><code class="sig-name descname"><span class="pre">two_mean_test</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_stats</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/statistics/inference/hypothesis.html#two_mean_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#statistics.inference.hypothesis.two_mean_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a two mean test</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_stats</strong> – Summaary Statistics of two numerical variables. Check the example below for details.</p></li>
+<li><p><strong>categories</strong> – A Tuple with the name of the categories required to use the test. The order is important, the first
+element of the Tuple will be <cite>X1</cite> and the second element will be <cite>X2</cite>. The Null Hypothesis is <cite>X1 - X2 = 0</cite></p></li>
+<li><p><strong>alternative</strong> – ‘less’, ‘greater’, or ‘two-sided’.</p></li>
+<li><p><strong>**args</strong> – Optional parameters will be packed in <cite>args</cite>. Currently, there is only one optional parameter:
+<cite>df</cite>, which is used to specify how to calculate the degrees of freedom for the t-distribution. If the value
+of df is set to <cite>satterthwait</cite>, the Satterthwait approximation will be used. Any other values will result in
+the minimum of <cite>n1-1</cite> or <cite>n2-1</cite></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dict with the calculated “t” parameter and the p-value</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>The following is an example of the format required for the <cite>data_stats</cite> parameter. The index values are the
+descriptive statistics of the numeric variable and it must include <cite>count</cite>, <cite>mean</cite>, and <cite>std</cite>. It can easily be
+generated with the <cite>pandas.DataFrame.describe</cite> method:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data_stats</span>
+<span class="go">Out[1]:</span>
+<span class="go">Drink     Coffee        Tea</span>
+<span class="go">count  10.000000  11.000000</span>
+<span class="go">mean   17.700000  34.818182</span>
+<span class="go">std    16.693645  21.084678</span>
+<span class="gp">...</span>
+<span class="go">max    52.000000  58.000000</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="statistics.inference.hypothesis.two_proportions_test">
+<code class="sig-prename descclassname"><span class="pre">statistics.inference.hypothesis.</span></code><code class="sig-name descname"><span class="pre">two_proportions_test</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/statistics/inference/hypothesis.html#two_proportions_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#statistics.inference.hypothesis.two_proportions_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a two proportions test</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample</strong> – Series with the count of two categorical variables. Check the example below for details.</p></li>
+<li><p><strong>categories</strong> – A Tuple with the name of the categories required to use the test. The order is important, the first
+element of the Tuple will be used for <cite>p1</cite> and the second element for <cite>p2</cite>. The Null Hypothesis is
+<cite>X1 - X2 = 0</cite></p></li>
+<li><p><strong>alternative</strong> – ‘less’, ‘greater’, or ‘two-sided’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dict with the calculated “z” parameter and the p-value</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>The following is an example of the format for the <cite>sample</cite> parameter. Similarly to <cite>single_proportion_test</cite>, the
+index values (Desipramine, Lithium, Placebo) are the categories, and the values are the count of elements in
+each category. The <cite>two_proportions_test</cite>, requires at least three categories:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample</span>
+<span class="go">Out[1]:</span>
+<span class="go">Drug</span>
+<span class="go">Desipramine    14</span>
+<span class="go">Lithium         6</span>
+<span class="go">Placebo         4</span>
+<span class="go">Name: Relapse, dtype: int64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-statistics.inference.confidence">
+<span id="confidence-intervals"></span><h3>Confidence Intervals<a class="headerlink" href="#module-statistics.inference.confidence" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt id="statistics.inference.confidence.single_mean_interval">
+<code class="sig-prename descclassname"><span class="pre">statistics.inference.confidence.</span></code><code class="sig-name descname"><span class="pre">single_mean_interval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ci</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><a class="reference internal" href="_modules/statistics/inference/confidence.html#single_mean_interval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#statistics.inference.confidence.single_mean_interval" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample</strong> – Numeric variable with the values in a Pandas Series</p></li>
+<li><p><strong>ci</strong> – Level of confidence for the interval as a real number between 0 and 1. i.e. 0.90 for a 90% interval</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple with the start and end values of the interval.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="statistics.inference.confidence.two_proportions_interval">
+<code class="sig-prename descclassname"><span class="pre">statistics.inference.confidence.</span></code><code class="sig-name descname"><span class="pre">two_proportions_interval</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.series.Series</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">categories</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ci</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/statistics/inference/confidence.html#two_proportions_interval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#statistics.inference.confidence.two_proportions_interval" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample</strong> – Series with the count of two categorical variables. Check the example below for details.</p></li>
+<li><p><strong>categories</strong> – A Tuple with the name of the categories required to use the test. The order is important, the first
+element of the Tuple will be used for <cite>p1</cite> and the second element for <cite>p2</cite>. The confidence interval
+is one <cite>p1 - p2</cite></p></li>
+<li><p><strong>ci</strong> – Level of confidence for the interval as a real number between 0 and 1. i.e. 0.90 for a 90% interval</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple with the start and end values of the interval.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>The following is an example of the format for the <cite>sample</cite> parameter. Similarly to <cite>single_proportion_interval</cite>,
+the index values (Desipramine, Lithium, Placebo) are the categories, and the values are the count of elements in
+each category. The <cite>two_proportions_interval</cite>, requires at least three categories:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample</span>
+<span class="go">Out[1]:</span>
+<span class="go">Drug</span>
+<span class="go">Desipramine    14</span>
+<span class="go">Lithium         6</span>
+<span class="go">Placebo         4</span>
+<span class="go">Name: Relapse, dtype: int64</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Cesar Gama.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
